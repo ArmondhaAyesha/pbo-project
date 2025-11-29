@@ -1,15 +1,14 @@
 public class Mahasiswa extends Identitas {
 
-    private String kelas;   // atribut tambahan
-    private Nilai nilai;    // Mahasiswa yang memiliki Nilai
+    private String kelas;  
+    private Nilai nilai;    
 
     public Mahasiswa(String nim, String nama, String email, String kelas, Nilai nilai) {
-        super(nim, nama, email);     // untuk memnaggil constructor Identitas
+        super(nim, nama, email);    
         this.kelas = kelas;
         this.nilai = nilai;
     }
 
-    // getter & setter
     public String getKelas() {
         return kelas;
     }
@@ -26,9 +25,8 @@ public class Mahasiswa extends Identitas {
         this.nilai = nilai;
     }
 
-    // untuk menampilkan data mahasiswa lengkap
     public void tampilMahasiswa() {
-        super.tampilIdentitas(); // tampilkan nim, nama, email
+        super.tampilIdentitas(); 
         System.out.println("Kelas : " + kelas);
 
         if (nilai != null) {
@@ -41,3 +39,4 @@ public class Mahasiswa extends Identitas {
     }
 
 }
+
