@@ -6,7 +6,7 @@ public class Main {
 
         System.out.print("Nilai mahasiswa yang ingin diinput? : ");
         int jumlah = in.nextInt();
-        in.nextLine(); // buang enter
+        in.nextLine();
 
         Mahasiswa[] data = new Mahasiswa[jumlah];
 
@@ -33,7 +33,7 @@ public class Main {
 
             System.out.print("Masukkan Nilai UAS   : ");
             double uas = in.nextDouble();
-            in.nextLine(); // buang enter
+            in.nextLine();
 
             Nilai nilai = new Nilai(tugas, uts, uas);
 
@@ -42,7 +42,6 @@ public class Main {
             data[i] = mhs;
         }
 
-        // OUTPUT
         System.out.println("\n===== DATA SELURUH MAHASISWA =====");
         for (int i = 0; i < jumlah; i++) {
             System.out.println("\nMahasiswa ke-" + (i + 1));
@@ -50,3 +49,4 @@ public class Main {
         }
     }
 }
+
