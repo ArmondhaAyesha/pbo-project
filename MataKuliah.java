@@ -20,3 +20,4 @@ public class MataKuliah {
         return dosenPengampu.getNama();
     }
 }
+
