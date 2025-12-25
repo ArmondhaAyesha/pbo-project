@@ -1,7 +1,6 @@
 public class Nilai {
-    private double uts;
-    private double uas;
-    private double tugas;
+
+    private double uts, uas, tugas;
 
     public Nilai(double uts, double uas, double tugas) {
         this.uts = uts;
@@ -10,17 +9,14 @@ public class Nilai {
     }
 
     public double hitungRataRata() {
-        return (uts + uas + tugas) / 3.0;
+        return (uts + uas + tugas) / 3;
     }
 
     public String statusKelulusan() {
-        double r = hitungRataRata();
-        return (r > 70) ? "Lulus" : "Tidak Lulus";
+        return hitungRataRata() >= 70 ? "Lulus" : "Tidak Lulus";
     }
 
-    // Getter-setter jika dibutuhkan
     public double getUts() { return uts; }
     public double getUas() { return uas; }
     public double getTugas() { return tugas; }
 }
-
