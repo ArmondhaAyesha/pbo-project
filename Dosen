@@ -1,0 +1,13 @@
+public class Dosen extends Identitas {
+
+    private String nidn;
+
+    public Dosen(String nidn, String nama, String email) {
+        super(nidn, nama, email);
+        this.nidn = nidn;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+}
