@@ -1,23 +1,28 @@
 public class MataKuliah {
-
-    private String kodeMatkul;
-    private String namaMatkul;
-    private int sks;
+    private String kodeMK;
+    private String namaMK;
     private Dosen dosenPengampu;
 
-    public MataKuliah(String kodeMatkul, String namaMatkul, int sks, Dosen dosenPengampu) {
-        this.kodeMatkul = kodeMatkul;
-        this.namaMatkul = namaMatkul;
-        this.sks = sks;
+    public MataKuliah(String kodeMK, String namaMK, Dosen dosenPengampu) {
+        this.kodeMK = kodeMK;
+        this.namaMK = namaMK;
         this.dosenPengampu = dosenPengampu;
     }
 
-    public String getNamaMatkul() {
-        return namaMatkul;
+    public String getKodeMK() {
+        return kodeMK;
     }
 
-    public String getNamaDosen() {
-        return dosenPengampu.getNama();
+    public String getNamaMK() {
+        return namaMK;
+    }
+
+    public Dosen getDosenPengampu() {
+        return dosenPengampu;
+    }
+
+    @Override
+    public String toString() {
+        return kodeMK + " - " + namaMK;
     }
 }
-
