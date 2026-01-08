@@ -1,13 +1,22 @@
 public class Dosen extends Identitas {
 
-    private String nidn;
-
-    public Dosen(String nidn, String nama, String email) {
-        super(nidn, nama, email);
-        this.nidn = nidn;
+    public Dosen(String nidn, String nama) {
+        super(nidn, nama);
     }
 
-    public String getNama() {
-        return nama;
+    @Override
+    public String getJenis() {
+        return "Dosen";
+    }
+
+    // DOSEN input nilai
+    public Nilai inputNilai(Mahasiswa mhs, MataKuliah mk,
+                            double uts, double uas, double tugas) {
+
+        if (!mk.getDosenPengampu().getId().equals(this.id)) {
+            throw new RuntimeException("Bukan dosen pengampu!");
+        }
+
+        return new Nilai(mhs, mk, uts, uas, tugas);
     }
 }
