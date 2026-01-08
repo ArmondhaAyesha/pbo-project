@@ -1,0 +1,4 @@
+public interface Penilaian {
+    double hitungRata();
+    String getStatus();
+}
