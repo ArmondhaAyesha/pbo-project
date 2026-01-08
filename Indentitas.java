@@ -1,11 +1,19 @@
-public class Identitas {
+public abstract class Identitas {
     protected String id;
     protected String nama;
-    protected String email;
 
-    public Identitas(String id, String nama, String email) {
+    public Identitas(String id, String nama) {
         this.id = id;
         this.nama = nama;
-        this.email = email;
+    }
+
+    public abstract String getJenis();
+
+    public String getId() {
+        return id;
+    }
+
+    public String getNama() {
+        return nama;
     }
 }
