@@ -1,22 +1,33 @@
-public class Nilai {
+public class Nilai implements Penilaian {
 
+    private Mahasiswa mahasiswa;
+    private MataKuliah mataKuliah;
     private double uts, uas, tugas;
 
-    public Nilai(double uts, double uas, double tugas) {
+    public Nilai(Mahasiswa mahasiswa, MataKuliah mataKuliah,
+                 double uts, double uas, double tugas) {
+        this.mahasiswa = mahasiswa;
+        this.mataKuliah = mataKuliah;
         this.uts = uts;
         this.uas = uas;
         this.tugas = tugas;
     }
 
-    public double hitungRataRata() {
+    @Override
+    public double hitungRata() {
         return (uts + uas + tugas) / 3;
     }
 
-    public String statusKelulusan() {
-        return hitungRataRata() >= 70 ? "Lulus" : "Tidak Lulus";
+    @Override
+    public String getStatus() {
+        return hitungRata() >= 70 ? "LULUS" : "TIDAK LULUS";
     }
 
-    public double getUts() { return uts; }
-    public double getUas() { return uas; }
-    public double getTugas() { return tugas; }
+    public Mahasiswa getMahasiswa() {
+        return mahasiswa;
+    }
+
+    public MataKuliah getMataKuliah() {
+        return mataKuliah;
+    }
 }
