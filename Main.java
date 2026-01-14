@@ -19,7 +19,6 @@ public class Main extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10,10));
 
-        /* ================= HEADER ================= */
         JLabel title = new JLabel("KARTU HASIL STUDI", JLabel.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setOpaque(true);
@@ -28,7 +27,6 @@ public class Main extends JFrame {
         title.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         add(title, BorderLayout.NORTH);
 
-        /* ================= IDENTITAS ================= */
         JPanel identitas = new JPanel(new GridLayout(4,2,5,5));
         identitas.setBorder(BorderFactory.createTitledBorder("Identitas Mahasiswa"));
 
@@ -46,7 +44,6 @@ public class Main extends JFrame {
         identitas.add(new JLabel("Kelas"));
         identitas.add(lblKelas);
 
-        /* ================= TABLE ================= */
         model = new DefaultTableModel(
                 new String[]{"ID","Kode MK","Mata Kuliah","UTS","UAS","Tugas","Rata","Status"},0
         );
@@ -54,7 +51,6 @@ public class Main extends JFrame {
         table = new JTable(model);
         table.setRowHeight(24);
 
-        // sembunyikan kolom ID
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
         table.getColumnModel().getColumn(0).setWidth(0);
@@ -82,7 +78,6 @@ public class Main extends JFrame {
         tengah.add(identitas, BorderLayout.NORTH);
         tengah.add(scroll, BorderLayout.CENTER);
 
-        /* ================= INPUT ================= */
         JPanel input = new JPanel(new GridLayout(9,2,5,5));
         input.setBorder(BorderFactory.createTitledBorder("Input / Update Nilai"));
 
@@ -118,7 +113,6 @@ public class Main extends JFrame {
         add(input, BorderLayout.WEST);
         add(tengah, BorderLayout.CENTER);
 
-        /* ================= EVENT ================= */
         btnTambah.addActionListener(e -> tambahNilai());
         btnUpdate.addActionListener(e -> updateNilai());
         btnHapus.addActionListener(e -> hapusNilai());
@@ -131,7 +125,6 @@ public class Main extends JFrame {
         loadMahasiswa();
     }
 
-    /* ================= DATABASE ================= */
 
     void loadMahasiswa() {
         try (Connection c = Database.getConnection();
@@ -260,6 +253,6 @@ public class Main extends JFrame {
 
     public static void main(String[] args) {
         Database.init();
-        new Main().setVisible(true);
+        new LoginFrame();
     }
 }
