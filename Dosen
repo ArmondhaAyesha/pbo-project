@@ -19,3 +19,5 @@ public class Dosen extends Identitas {
         return new Nilai(mhs, mk, uts, uas, tugas);
     }
 }
+
+
