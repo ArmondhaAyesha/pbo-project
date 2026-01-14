@@ -1,0 +1,45 @@
+import java.sql.*;
+
+public class Auth {
+
+    public static boolean login(String user, String pass) {
+        try (Connection c = Database.getConnection()) {
+
+            PreparedStatement ps = c.prepareStatement(
+                    "SELECT * FROM user WHERE username=? AND password=?");
+            ps.setString(1, user);
+            ps.setString(2, pass);
+
+            ResultSet r = ps.executeQuery();
+            return r.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean register(String user, String pass) {
+        try (Connection c = Database.getConnection()) {
+
+            PreparedStatement cek = c.prepareStatement(
+                    "SELECT username FROM user WHERE username=?");
+            cek.setString(1, user);
+            ResultSet r = cek.executeQuery();
+
+            if (r.next()) return false; // username sudah ada
+
+            PreparedStatement ps = c.prepareStatement(
+                    "INSERT INTO user VALUES (?,?)");
+            ps.setString(1, user);
+            ps.setString(2, pass);
+            ps.executeUpdate();
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
