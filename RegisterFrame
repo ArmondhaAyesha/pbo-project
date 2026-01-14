@@ -1,0 +1,49 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class RegisterFrame extends JFrame {
+
+    JTextField txtUser;
+    JPasswordField txtPass;
+
+    public RegisterFrame() {
+        setTitle("Buat Akun");
+        setSize(300, 180);
+        setLocationRelativeTo(null);
+        setLayout(new GridLayout(4,2,5,5));
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        add(new JLabel("Username"));
+        txtUser = new JTextField();
+        add(txtUser);
+
+        add(new JLabel("Password"));
+        txtPass = new JPasswordField();
+        add(txtPass);
+
+        JButton btnDaftar = new JButton("Daftar");
+        add(new JLabel(""));
+        add(btnDaftar);
+
+        btnDaftar.addActionListener(e -> daftar());
+
+        setVisible(true);
+    }
+
+    void daftar() {
+        String user = txtUser.getText();
+        String pass = new String(txtPass.getPassword());
+
+        if (user.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
+            return;
+        }
+
+        if (Auth.register(user, pass)) {
+            JOptionPane.showMessageDialog(this, "Akun berhasil dibuat");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Username sudah digunakan");
+        }
+    }
+}
