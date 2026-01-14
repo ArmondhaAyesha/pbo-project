@@ -3,13 +3,12 @@ public class Dosen extends Identitas {
     public Dosen(String nidn, String nama) {
         super(nidn, nama);
     }
-
+    //Override
     @Override
     public String getJenis() {
         return "Dosen";
     }
 
-    // DOSEN input nilai
     public Nilai inputNilai(Mahasiswa mhs, MataKuliah mk,
                             double uts, double uas, double tugas) {
 
