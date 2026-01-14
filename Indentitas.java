@@ -1,19 +1,48 @@
-public abstract class Identitas {
-    protected String id;
-    protected String nama;
+import javax.swing.*;
+import java.awt.*;
 
-    public Identitas(String id, String nama) {
-        this.id = id;
-        this.nama = nama;
+public class LoginFrame extends JFrame {
+
+    JTextField txtUser;
+    JPasswordField txtPass;
+
+    public LoginFrame() {
+        setTitle("Login Sistem KHS");
+        setSize(320, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new GridLayout(5,2,5,5));
+
+        add(new JLabel("Username"));
+        txtUser = new JTextField();
+        add(txtUser);
+
+        add(new JLabel("Password"));
+        txtPass = new JPasswordField();
+        add(txtPass);
+
+        JButton btnLogin = new JButton("Login");
+        JButton btnRegister = new JButton("Buat Akun");
+
+        add(btnLogin);
+        add(btnRegister);
+
+        btnLogin.addActionListener(e -> login());
+        btnRegister.addActionListener(e -> new RegisterFrame());
+
+        setVisible(true);
     }
 
-    public abstract String getJenis();
+    void login() {
+        String user = txtUser.getText();
+        String pass = new String(txtPass.getPassword());
 
-    public String getId() {
-        return id;
-    }
-
-    public String getNama() {
-        return nama;
+        if (Auth.login(user, pass)) {
+            JOptionPane.showMessageDialog(this, "Login Berhasil");
+            dispose();
+            new Main().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Username atau Password salah!");
+        }
     }
 }
