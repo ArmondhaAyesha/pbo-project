@@ -44,6 +44,12 @@ public class Database {
                         ON UPDATE CASCADE
                 )
             """);
+            s.execute("""
+            CREATE TABLE IF NOT EXISTS user (
+                 username TEXT PRIMARY KEY,
+                 password TEXT NOT NULL
+               )
+           """);
 
             System.out.println("Database & tabel siap ✔");
 
