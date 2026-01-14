@@ -30,3 +30,4 @@ public class Mahasiswa extends Identitas {
         return daftarNilai;
     }
 }
+
