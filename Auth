@@ -30,7 +30,7 @@ public class Auth {
             if (r.next()) return false; // username sudah ada
 
             PreparedStatement ps = c.prepareStatement(
-                    "INSERT INTO user VALUES (?,?)");
+                    "INSERT INTO user (username, password) VALUES (?,?)");
             ps.setString(1, user);
             ps.setString(2, pass);
             ps.executeUpdate();
