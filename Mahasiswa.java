@@ -1,27 +1,18 @@
 import java.util.ArrayList;
 import java.util.List;
-
+//inheritance
 public class Mahasiswa extends Identitas {
 
     private String kelas;
-    private List<Nilai> daftarNilai; // KOMPOSISI
+
+    //KOMPOSISI
+    private List<Nilai> daftarNilai = new ArrayList<>();
 
     public Mahasiswa(String nim, String nama, String kelas) {
         super(nim, nama);
         this.kelas = kelas;
-        this.daftarNilai = new ArrayList<>();
     }
-
-    @Override
-    public String getJenis() {
-        return "Mahasiswa";
-    }
-
-    public String getKelas() {
-        return kelas;
-    }
-
-    // bagian komposisi
+    
     public void tambahNilai(Nilai nilai) {
         daftarNilai.add(nilai);
     }
@@ -29,5 +20,14 @@ public class Mahasiswa extends Identitas {
     public List<Nilai> getDaftarNilai() {
         return daftarNilai;
     }
-}
 
+    public String getKelas() {
+        return kelas;
+    }
+
+    //OVERRIDING
+    @Override
+    public String getJenis() {
+        return "Mahasiswa";
+    }
+}
