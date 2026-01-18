@@ -6,28 +6,83 @@ import java.sql.*;
 
 public class Main extends JFrame {
 
+    private final String role; // DOSEN / MAHASISWA
+
     JTextField txtNIM, txtNama, txtKelas, txtUTS, txtUAS, txtTugas;
-    JLabel lblNama, lblNIM, lblKelas;
+    JLabel lblNama, lblNIM, lblKelas, lblRole;
     JTable table;
     DefaultTableModel model;
     JComboBox<String> cbMK, cbMahasiswa;
 
-    public Main() {
-        setTitle("KHS Mahasiswa");
-        setSize(1000, 550);
+    JButton btnTambah, btnUpdate, btnHapus, btnClear;
+
+    public Main(String role) {
+        this.role = role;
+
+        setTitle("Sistem Manajemen Nilai");
+        setSize(1100, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10,10));
+        setLayout(new BorderLayout(10, 10));
 
+        /* ================= HEADER ================= */
+        JPanel header = new JPanel(new BorderLayout());
         JLabel title = new JLabel("KARTU HASIL STUDI", JLabel.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 26));
         title.setOpaque(true);
-        title.setBackground(new Color(67,160,71));
+        title.setBackground(new Color(67, 160, 71));
         title.setForeground(Color.WHITE);
-        title.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        add(title, BorderLayout.NORTH);
+        title.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        header.add(title, BorderLayout.CENTER);
 
-        JPanel identitas = new JPanel(new GridLayout(4,2,5,5));
+        lblRole = new JLabel("Mode: " + role, JLabel.RIGHT);
+        lblRole.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        header.add(lblRole, BorderLayout.SOUTH);
+
+        add(header, BorderLayout.NORTH);
+
+        /* ================= MENU BAR ================= */
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menuAkun = new JMenu("Akun");
+
+        JMenuItem miGantiRole = new JMenuItem("Ganti Peran");
+        JMenuItem miLogout = new JMenuItem("Logout");
+
+        menuAkun.add(miGantiRole);
+        menuAkun.addSeparator();
+        menuAkun.add(miLogout);
+
+        menuBar.add(menuAkun);
+        setJMenuBar(menuBar);
+
+        miGantiRole.addActionListener(e -> {
+            int ok = JOptionPane.showConfirmDialog(
+                    this,
+                    "Kembali ke menu pilih peran?",
+                    "Konfirmasi",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (ok == JOptionPane.YES_OPTION) {
+                dispose();
+                new RoleFrame("User");
+            }
+        });
+
+        miLogout.addActionListener(e -> {
+            int ok = JOptionPane.showConfirmDialog(
+                    this,
+                    "Logout dan kembali ke login?",
+                    "Logout",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (ok == JOptionPane.YES_OPTION) {
+                dispose();
+                new LoginFrame();
+            }
+        });
+
+        /* ================= PANEL IDENTITAS ================= */
+        JPanel identitas = new JPanel(new GridLayout(4, 2, 8, 8));
         identitas.setBorder(BorderFactory.createTitledBorder("Identitas Mahasiswa"));
 
         cbMahasiswa = new JComboBox<>();
@@ -35,7 +90,7 @@ public class Main extends JFrame {
         lblNIM = new JLabel("-");
         lblKelas = new JLabel("-");
 
-        identitas.add(new JLabel("Pilih NIM"));
+        identitas.add(new JLabel("Pilih Mahasiswa"));
         identitas.add(cbMahasiswa);
         identitas.add(new JLabel("Nama"));
         identitas.add(lblNama);
@@ -44,29 +99,26 @@ public class Main extends JFrame {
         identitas.add(new JLabel("Kelas"));
         identitas.add(lblKelas);
 
+        /* ================= TABEL ================= */
         model = new DefaultTableModel(
-                new String[]{"ID","Kode MK","Mata Kuliah","UTS","UAS","Tugas","Rata","Status"},0
-        );
+                new String[]{"ID", "Kode MK", "Mata Kuliah", "UTS", "UAS", "Tugas", "Rata", "Status"}, 0
+        ) {
+            public boolean isCellEditable(int r, int c) { return false; }
+        };
 
         table = new JTable(model);
-        table.setRowHeight(24);
-
+        table.setRowHeight(26);
         table.getColumnModel().getColumn(0).setMinWidth(0);
         table.getColumnModel().getColumn(0).setMaxWidth(0);
-        table.getColumnModel().getColumn(0).setWidth(0);
 
-        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
-            @Override
-            public Component getTableCellRendererComponent(
-                    JTable t, Object v, boolean s, boolean f, int r, int c) {
-
-                Component x = super.getTableCellRendererComponent(t,v,s,f,r,c);
-                if (!s) x.setBackground(r%2==0?new Color(245,249,245):Color.WHITE);
-                if (c==7) {
-                    if (v.toString().equals("LULUS"))
-                        x.setBackground(new Color(200,230,201));
-                    else
-                        x.setBackground(new Color(255,205,210));
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            public Component getTableCellRendererComponent(JTable t, Object v, boolean s, boolean f, int r, int c) {
+                Component x = super.getTableCellRendererComponent(t, v, s, f, r, c);
+                if (!s) x.setBackground(r % 2 == 0 ? new Color(245, 249, 245) : Color.WHITE);
+                if (c == 7 && v != null) {
+                    x.setBackground(v.toString().equals("LULUS")
+                            ? new Color(200, 230, 201)
+                            : new Color(255, 205, 210));
                 }
                 return x;
             }
@@ -74,11 +126,12 @@ public class Main extends JFrame {
 
         JScrollPane scroll = new JScrollPane(table);
 
-        JPanel tengah = new JPanel(new BorderLayout(5,5));
-        tengah.add(identitas, BorderLayout.NORTH);
-        tengah.add(scroll, BorderLayout.CENTER);
+        JPanel kanan = new JPanel(new BorderLayout(8, 8));
+        kanan.add(identitas, BorderLayout.NORTH);
+        kanan.add(scroll, BorderLayout.CENTER);
 
-        JPanel input = new JPanel(new GridLayout(9,2,5,5));
+        /* ================= PANEL INPUT ================= */
+        JPanel input = new JPanel(new GridLayout(10, 2, 8, 8));
         input.setBorder(BorderFactory.createTitledBorder("Input / Update Nilai"));
 
         txtNIM = new JTextField();
@@ -89,8 +142,9 @@ public class Main extends JFrame {
         txtTugas = new JTextField();
 
         cbMK = new JComboBox<>(new String[]{
-                "IF101 - PBO","IF102 - Basis Data","IF103 - Struktur Data",
-                "IF104 - Sistem Operasi","IF105 - Jaringan"
+                "IF101 - PBO", "IF102 - Basis Data",
+                "IF103 - Struktur Data", "IF104 - Sistem Operasi",
+                "IF105 - Jaringan"
         });
 
         input.add(new JLabel("NIM")); input.add(txtNIM);
@@ -101,39 +155,72 @@ public class Main extends JFrame {
         input.add(new JLabel("UAS")); input.add(txtUAS);
         input.add(new JLabel("Tugas")); input.add(txtTugas);
 
-        JButton btnTambah = new JButton("Tambah");
-        JButton btnUpdate = new JButton("Update");
-        JButton btnHapus  = new JButton("Hapus");
+        btnTambah = new JButton("Tambah");
+        btnUpdate = new JButton("Update");
+        btnHapus  = new JButton("Hapus");
+        btnClear  = new JButton("Clear");
 
-        input.add(btnTambah);
-        input.add(btnUpdate);
-        input.add(new JLabel(""));
-        input.add(btnHapus);
+        input.add(btnTambah); input.add(btnUpdate);
+        input.add(btnHapus);  input.add(btnClear);
 
-        add(input, BorderLayout.WEST);
-        add(tengah, BorderLayout.CENTER);
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, input, kanan);
+        split.setDividerLocation(360);
+        add(split, BorderLayout.CENTER);
 
+        /* ================= ACTION ================= */
         btnTambah.addActionListener(e -> tambahNilai());
         btnUpdate.addActionListener(e -> updateNilai());
         btnHapus.addActionListener(e -> hapusNilai());
+        btnClear.addActionListener(e -> clearForm());
 
         cbMahasiswa.addActionListener(e -> {
-            if (cbMahasiswa.getSelectedItem()!=null)
-                tampilkanKHS(cbMahasiswa.getSelectedItem().toString());
+            if (cbMahasiswa.getSelectedItem() == null) return;
+            tampilkanKHS(extractNim(cbMahasiswa.getSelectedItem().toString()));
         });
 
+        applyRoleUI();
         loadMahasiswa();
     }
 
+    /* ================= ROLE ================= */
+    void applyRoleUI() {
+        boolean dosen = role.equals("DOSEN");
+        txtNIM.setEditable(dosen);
+        txtNama.setEditable(dosen);
+        txtKelas.setEditable(dosen);
+        txtUTS.setEditable(dosen);
+        txtUAS.setEditable(dosen);
+        txtTugas.setEditable(dosen);
+        cbMK.setEnabled(dosen);
+        btnTambah.setEnabled(dosen);
+        btnUpdate.setEnabled(dosen);
+        btnHapus.setEnabled(dosen);
+    }
 
+    /* ================= DB LOGIC ================= */
     void loadMahasiswa() {
+        cbMahasiswa.removeAllItems();
         try (Connection c = Database.getConnection();
-             Statement s = c.createStatement();
-             ResultSet r = s.executeQuery("SELECT nim FROM mahasiswa")) {
+             ResultSet r = c.createStatement().executeQuery(
+                     "SELECT DISTINCT m.nim, m.nama, m.kelas FROM mahasiswa m JOIN nilai n ON m.nim=n.nim")) {
+            while (r.next())
+                cbMahasiswa.addItem(r.getString("nim")+" - "+r.getString("nama")+" ("+r.getString("kelas")+")");
+        } catch (Exception ignored) {}
+    }
 
-            while (r.next()) cbMahasiswa.addItem(r.getString("nim"));
-
-        } catch (Exception e) { e.printStackTrace(); }
+    void tampilkanKHS(String nim) {
+        model.setRowCount(0);
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM nilai WHERE nim=?");
+            ps.setString(1, nim);
+            ResultSet r = ps.executeQuery();
+            while (r.next())
+                model.addRow(new Object[]{
+                        r.getInt("id"), r.getString("kode_mk"), r.getString("nama_mk"),
+                        r.getDouble("uts"), r.getDouble("uas"), r.getDouble("tugas"),
+                        r.getDouble("rata"), r.getString("status")
+                });
+        } catch (Exception ignored) {}
     }
 
     void tambahNilai() {
@@ -143,113 +230,120 @@ public class Main extends JFrame {
             String nama = txtNama.getText();
             String kelas = txtKelas.getText();
 
-            c.prepareStatement(
-                    "INSERT OR IGNORE INTO mahasiswa VALUES ('"+nim+"','"+nama+"','"+kelas+"')"
-            ).executeUpdate();
+            String mk = cbMK.getSelectedItem().toString();
+            String kodeMK = mk.split(" - ")[0];
+            String namaMK = mk.split(" - ")[1];
 
-            String[] mk = cbMK.getSelectedItem().toString().split(" - ");
             double uts = Double.parseDouble(txtUTS.getText());
             double uas = Double.parseDouble(txtUAS.getText());
             double tugas = Double.parseDouble(txtTugas.getText());
-            double rata = (uts+uas+tugas)/3;
-            String status = rata>=70?"LULUS":"TIDAK LULUS";
 
-            PreparedStatement ps = c.prepareStatement(
+            double rata = (uts + uas + tugas) / 3;
+            String status = rata >= 70 ? "LULUS" : "TIDAK LULUS";
+
+            // simpan mahasiswa (jika belum ada)
+            PreparedStatement psMhs = c.prepareStatement(
+                    "INSERT OR IGNORE INTO mahasiswa VALUES (?,?,?)");
+            psMhs.setString(1, nim);
+            psMhs.setString(2, nama);
+            psMhs.setString(3, kelas);
+            psMhs.executeUpdate();
+
+            // simpan nilai
+            PreparedStatement psNilai = c.prepareStatement(
                     "INSERT INTO nilai (nim,kode_mk,nama_mk,uts,uas,tugas,rata,status) VALUES (?,?,?,?,?,?,?,?)");
-            ps.setString(1,nim);
-            ps.setString(2,mk[0]);
-            ps.setString(3,mk[1]);
-            ps.setDouble(4,uts);
-            ps.setDouble(5,uas);
-            ps.setDouble(6,tugas);
-            ps.setDouble(7,rata);
-            ps.setString(8,status);
-            ps.executeUpdate();
+            psNilai.setString(1, nim);
+            psNilai.setString(2, kodeMK);
+            psNilai.setString(3, namaMK);
+            psNilai.setDouble(4, uts);
+            psNilai.setDouble(5, uas);
+            psNilai.setDouble(6, tugas);
+            psNilai.setDouble(7, rata);
+            psNilai.setString(8, status);
+            psNilai.executeUpdate();
 
-            if (((DefaultComboBoxModel<?>)cbMahasiswa.getModel()).getIndexOf(nim)==-1)
-                cbMahasiswa.addItem(nim);
-
+            JOptionPane.showMessageDialog(this, "Nilai berhasil ditambahkan");
+            loadMahasiswa();
             tampilkanKHS(nim);
+            clearForm();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Input salah!");
+            JOptionPane.showMessageDialog(this, "Input tidak valid");
         }
-    }
-
-    void tampilkanKHS(String nim) {
-        model.setRowCount(0);
-
-        try (Connection c = Database.getConnection()) {
-
-            ResultSet m = c.createStatement()
-                    .executeQuery("SELECT * FROM mahasiswa WHERE nim='"+nim+"'");
-
-            if (m.next()) {
-                lblNama.setText(m.getString("nama"));
-                lblNIM.setText(m.getString("nim"));
-                lblKelas.setText(m.getString("kelas"));
-            }
-
-            ResultSet r = c.createStatement()
-                    .executeQuery("SELECT * FROM nilai WHERE nim='"+nim+"'");
-
-            while (r.next()) {
-                model.addRow(new Object[]{
-                        r.getInt("id"),
-                        r.getString("kode_mk"),
-                        r.getString("nama_mk"),
-                        r.getDouble("uts"),
-                        r.getDouble("uas"),
-                        r.getDouble("tugas"),
-                        String.format("%.2f", r.getDouble("rata")),
-                        r.getString("status")
-                });
-            }
-
-        } catch (Exception e) { e.printStackTrace(); }
     }
 
     void updateNilai() {
         int row = table.getSelectedRow();
-        if (row < 0) return;
-
-        int id = Integer.parseInt(model.getValueAt(row,0).toString());
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data di tabel");
+            return;
+        }
 
         try (Connection c = Database.getConnection()) {
+
+            int id = (int) model.getValueAt(row, 0);
 
             double uts = Double.parseDouble(txtUTS.getText());
             double uas = Double.parseDouble(txtUAS.getText());
             double tugas = Double.parseDouble(txtTugas.getText());
-            double rata = (uts+uas+tugas)/3;
-            String status = rata>=70?"LULUS":"TIDAK LULUS";
+
+            double rata = (uts + uas + tugas) / 3;
+            String status = rata >= 70 ? "LULUS" : "TIDAK LULUS";
 
             PreparedStatement ps = c.prepareStatement(
-                    "UPDATE nilai SET uts=?,uas=?,tugas=?,rata=?,status=? WHERE id=?");
-            ps.setDouble(1,uts);
-            ps.setDouble(2,uas);
-            ps.setDouble(3,tugas);
-            ps.setDouble(4,rata);
-            ps.setString(5,status);
-            ps.setInt(6,id);
+                    "UPDATE nilai SET uts=?, uas=?, tugas=?, rata=?, status=? WHERE id=?");
+            ps.setDouble(1, uts);
+            ps.setDouble(2, uas);
+            ps.setDouble(3, tugas);
+            ps.setDouble(4, rata);
+            ps.setString(5, status);
+            ps.setInt(6, id);
             ps.executeUpdate();
 
+            JOptionPane.showMessageDialog(this, "Nilai berhasil diupdate");
             tampilkanKHS(lblNIM.getText());
 
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal update nilai");
+        }
     }
 
     void hapusNilai() {
         int row = table.getSelectedRow();
-        if (row < 0) return;
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data di tabel");
+            return;
+        }
 
-        int id = Integer.parseInt(model.getValueAt(row,0).toString());
+        int ok = JOptionPane.showConfirmDialog(
+                this, "Hapus nilai ini?", "Konfirmasi",
+                JOptionPane.YES_NO_OPTION);
+
+        if (ok != JOptionPane.YES_OPTION) return;
 
         try (Connection c = Database.getConnection()) {
-            c.createStatement().executeUpdate(
-                    "DELETE FROM nilai WHERE id="+id);
+
+            int id = (int) model.getValueAt(row, 0);
+
+            PreparedStatement ps = c.prepareStatement(
+                    "DELETE FROM nilai WHERE id=?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Nilai berhasil dihapus");
             tampilkanKHS(lblNIM.getText());
-        } catch (Exception e) { e.printStackTrace(); }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal hapus nilai");
+        }
     }
+
+    void clearForm() {
+        txtNIM.setText(""); txtNama.setText(""); txtKelas.setText("");
+        txtUTS.setText(""); txtUAS.setText(""); txtTugas.setText("");
+    }
+
+    String extractNim(String s) { return s.split(" - ")[0]; }
 
     public static void main(String[] args) {
         Database.init();
