@@ -40,7 +40,7 @@ public class LoginFrame extends JFrame {
         if (Auth.login(user, pass)) {
             JOptionPane.showMessageDialog(this, "Login Berhasil");
             dispose();
-            new Main().setVisible(true);
+            new RoleFrame(user); //bagian yang diupdate
         } else {
             JOptionPane.showMessageDialog(this, "Username atau Password salah!");
         }
