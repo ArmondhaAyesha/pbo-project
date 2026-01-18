@@ -1,0 +1,45 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class RoleFrame extends JFrame {
+
+    public RoleFrame(String username) {
+
+        setTitle("Pilih Peran");
+        setSize(420, 220);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10,10));
+
+        JLabel title = new JLabel("Pilih Peran Pengguna", JLabel.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        add(title, BorderLayout.NORTH);
+
+        JLabel info = new JLabel("Login sebagai: " + username, JLabel.CENTER);
+        add(info, BorderLayout.CENTER);
+
+        JPanel panelBtn = new JPanel(new GridLayout(1,2,10,10));
+        panelBtn.setBorder(BorderFactory.createEmptyBorder(10,20,20,20));
+
+        JButton btnMahasiswa = new JButton("Mahasiswa");
+        JButton btnDosen = new JButton("Dosen");
+
+        panelBtn.add(btnMahasiswa);
+        panelBtn.add(btnDosen);
+
+        add(panelBtn, BorderLayout.SOUTH);
+
+        btnMahasiswa.addActionListener(e -> {
+            dispose();
+            new Main("MAHASISWA").setVisible(true);
+        });
+
+        btnDosen.addActionListener(e -> {
+            dispose();
+            new Main("DOSEN").setVisible(true);
+        });
+
+        setVisible(true);
+    }
+}
