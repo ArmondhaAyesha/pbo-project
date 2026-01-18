@@ -7,7 +7,11 @@ public class Database {
     private static final String URL = "jdbc:sqlite:khs.db";
 
     public static Connection getConnection() {
+        System.out.println("Working dir: " + new java.io.File(".").getAbsolutePath());
+        System.out.println("DB absolute: " + new java.io.File("khs.db").getAbsolutePath());
+
         try {
+            Class.forName("org.sqlite.JDBC");
             return DriverManager.getConnection(URL);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -18,40 +22,38 @@ public class Database {
         try (Connection c = getConnection();
              Statement s = c.createStatement()) {
 
-            /* ===== TABEL MAHASISWA ===== */
+            // reset tabel user biar struktur sesuai
+            s.execute("DROP TABLE IF EXISTS user");
+
+            // ✅ tabel untuk login/register
+            s.execute("""
+                CREATE TABLE IF NOT EXISTS user (
+                    username TEXT PRIMARY KEY,
+                    password TEXT NOT NULL
+                )
+            """);
+
             s.execute("""
                 CREATE TABLE IF NOT EXISTS mahasiswa (
-                    nim   TEXT PRIMARY KEY,
-                    nama  TEXT NOT NULL,
+                    nim TEXT PRIMARY KEY,
+                    nama TEXT NOT NULL,
                     kelas TEXT NOT NULL
                 )
             """);
 
-            /* ===== TABEL NILAI (KHS) ===== */
             s.execute("""
                 CREATE TABLE IF NOT EXISTS nilai (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     nim TEXT NOT NULL,
                     kode_mk TEXT NOT NULL,
                     nama_mk TEXT NOT NULL,
-                    uts REAL NOT NULL,
-                    uas REAL NOT NULL,
-                    tugas REAL NOT NULL,
-                    rata REAL NOT NULL,
-                    status TEXT NOT NULL,
-                    FOREIGN KEY (nim) REFERENCES mahasiswa(nim)
-                        ON DELETE CASCADE
-                        ON UPDATE CASCADE
+                    uts REAL,
+                    uas REAL,
+                    tugas REAL,
+                    rata REAL,
+                    status TEXT
                 )
             """);
-            s.execute("""
-            CREATE TABLE IF NOT EXISTS user (
-                 username TEXT PRIMARY KEY,
-                 password TEXT NOT NULL
-               )
-           """);
-
-            System.out.println("Database & tabel siap ✔");
 
         } catch (Exception e) {
             e.printStackTrace();
